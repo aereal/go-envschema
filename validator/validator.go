@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/aereal/go-envschema/envloader"
 	"github.com/xeipuuv/gojsonschema"
 )
 
@@ -27,9 +28,8 @@ func New(sl SchemaLoader) (*Validator, error) {
 }
 
 func (v *Validator) Validate() (*Result, error) {
-	value := getEnvs()
-	input := gojsonschema.NewGoLoader(value)
-	return v.ValidateValue(input)
+	loader := envloader.New()
+	return v.ValidateValue(loader)
 }
 
 func (v *Validator) ValidateValue(input ValueLoader) (*Result, error) {
