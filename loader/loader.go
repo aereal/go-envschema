@@ -3,7 +3,6 @@ package loader
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 
 	"github.com/aereal/go-envschema/envloader"
@@ -30,8 +29,8 @@ func (l *Loader) LoadValue(loader gojsonschema.JSONLoader, dest interface{}) err
 	if err != nil {
 		return fmt.Errorf("validation failed: %s", err)
 	}
-	if !result.IsValid() {
-		return errors.New("input value is not valid")
+	if !result.Valid() {
+		return result.CombinedError()
 	}
 
 	switch src := loader.JsonSource().(type) {
