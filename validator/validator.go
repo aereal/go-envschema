@@ -1,11 +1,8 @@
 package validator
 
 import (
-	"errors"
-	"os"
-	"strings"
-
 	"github.com/aereal/go-envschema/envloader"
+	"github.com/aereal/go-envschema/result"
 	"github.com/xeipuuv/gojsonschema"
 )
 
@@ -27,49 +24,15 @@ func New(sl SchemaLoader) (*Validator, error) {
 	}, nil
 }
 
-func (v *Validator) Validate() (*Result, error) {
+func (v *Validator) Validate() (result.Result, error) {
 	loader := envloader.New()
 	return v.ValidateValue(loader)
 }
 
-func (v *Validator) ValidateValue(input ValueLoader) (*Result, error) {
+func (v *Validator) ValidateValue(input ValueLoader) (result.Result, error) {
 	jsResult, err := v.schema.Validate(input)
 	if err != nil {
 		return nil, err
 	}
-	if jsResult.Valid() {
-		return &Result{isValid: true}, nil
-	}
-
-	result := &Result{isValid: false}
-	for _, err := range jsResult.Errors() {
-		result.errors = append(result.errors, errors.New(err.String()))
-	}
-	return result, nil
-}
-
-type Result struct {
-	errors  []error
-	isValid bool
-}
-
-func (r *Result) IsValid() bool {
-	return r.isValid
-}
-
-func (r *Result) Errors() []error {
-	return r.errors
-}
-
-func getEnvs() map[string]string {
-	return environAsMap(os.Environ())
-}
-
-func environAsMap(pairs []string) map[string]string {
-	envs := map[string]string{}
-	for _, env := range pairs {
-		pair := strings.SplitN(env, "=", 2)
-		envs[pair[0]] = pair[1]
-	}
-	return envs
+	return result.From(jsResult), nil
 }

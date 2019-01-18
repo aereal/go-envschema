@@ -30,7 +30,7 @@ func (l *Loader) LoadValue(loader gojsonschema.JSONLoader, dest interface{}) err
 	if err != nil {
 		return fmt.Errorf("validation failed: %s", err)
 	}
-	if !result.IsValid() {
+	if !result.Valid() {
 		return errors.New("input value is not valid")
 	}
 
