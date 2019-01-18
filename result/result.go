@@ -1,6 +1,9 @@
 package result
 
 import (
+	"errors"
+	"strings"
+
 	"github.com/xeipuuv/gojsonschema"
 )
 
@@ -16,6 +19,7 @@ type ResultError interface {
 type Result interface {
 	Valid() bool
 	Errors() []ResultError
+	CombinedError() error
 }
 
 func Success() Result {
@@ -45,4 +49,17 @@ func (r *result) Valid() bool {
 
 func (r *result) Errors() []ResultError {
 	return r.errors
+}
+
+func (r *result) CombinedError() error {
+	if len(r.errors) == 0 {
+		return nil
+	}
+
+	msgs := make([]string, len(r.errors)+1)
+	msgs[0] = "failed to following validations:"
+	for i, e := range r.errors {
+		msgs[i+1] = e.String()
+	}
+	return errors.New(strings.Join(msgs, "\n"))
 }
