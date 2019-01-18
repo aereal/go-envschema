@@ -2,6 +2,7 @@ package result
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/xeipuuv/gojsonschema"
@@ -59,7 +60,7 @@ func (r *result) CombinedError() error {
 	msgs := make([]string, len(r.errors)+1)
 	msgs[0] = "failed to following validations:"
 	for i, e := range r.errors {
-		msgs[i+1] = e.String()
+		msgs[i+1] = fmt.Sprintf("%q; actual=%v", e, e.Value())
 	}
 	return errors.New(strings.Join(msgs, "\n"))
 }
