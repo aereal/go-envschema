@@ -45,8 +45,13 @@ So all we need is validating the environment variables against the schema and ma
 
 refs. https://this.aereal.org/entry/container-apps-and-json-schema (Blog entry in Japanese)
 
+## Related works
+
+- [go-playground/validator][go-playground-validator]: focused on validating struct, no environment mapping
+
 [travis]: https://travis-ci.org/aereal/go-envschema
 [license]: https://github.com/aereal/go-envschema/blob/master/LICENSE
 [godoc]: https://godoc.org/github.com/aereal/go-envschema
 [twelve-factor-app]: https://12factor.net
 [json-schema]: https://json-schema.org
+[go-playground-validator]: https://github.com/go-playground/validator
